@@ -1,19 +1,20 @@
 #include <Arduino.h>
-#include <MyWiFi.h>
+#include <MqttClient.h>
+#include <IniFile.h>
 
-MyWiFi myWifi("Batman", "superman");
+MqttClient mqttClient;
 const int ledPin = D1;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
-  myWifi.connect();
+  mqttClient.connect();
 
   pinMode(D1, OUTPUT);
 }
 
 void loop() {
-  myWifi.mqttKeepAlive();
+  mqttClient.mqttKeepAlive();
   delay(5000);
-  //myWifi.sendMessage();
+  mqttClient.sendMessage();
 }
