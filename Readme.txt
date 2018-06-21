@@ -1,3 +1,3 @@
-Prosjektet bruker en mqtt brokjer fra cloudmqtt.
+Prosjektet bruker en mqtt broker fra cloudmqtt.
 
 https://customer.cloudmqtt.com/instance
