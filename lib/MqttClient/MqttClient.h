@@ -10,8 +10,10 @@ class MqttClient {
     MqttClient();
     void connect();
     String getDeviceId();
-		void sendMessage();
+		void sendMessage(String status);
 		void mqttKeepAlive();
+		boolean subscribe(String topic);
+		void setCallback(std::function<void(char*, uint8_t*, unsigned int)> callback);
 
 	private:
     String ssid;

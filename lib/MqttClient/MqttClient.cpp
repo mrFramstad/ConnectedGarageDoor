@@ -4,7 +4,6 @@
 #include "PubSubClient.h"
 #include "MqttClient.h"
 
-
 MqttClient::MqttClient() {
   ssid = SSID;
   pwd = WIFI_PWD;
@@ -14,6 +13,8 @@ MqttClient::MqttClient() {
   mqttPwd = MQTT_PWD;
 
   deviceId = "esp-" + String(ESP.getChipId(), HEX);
+
+
 
   mqtt = PubSubClient (wifiClient);
   mqtt.setServer(mqttBroker.c_str(), mqttPort);
@@ -37,12 +38,13 @@ void MqttClient::connect() {
   Serial.println(WiFi.localIP());
   Serial.print("deviceId: ");
   Serial.println(deviceId);
+  reconnect();
 }
 
-void MqttClient::sendMessage() {
-  Serial.println("Sending message...");
+void MqttClient::sendMessage(String status) {
+  Serial.println("Sending message: connectedGarageDoor" + getDeviceId() + "/status - " + status);
   String topic = "connectedGarageDoor/" + getDeviceId() + "/status";
-  mqtt.publish(topic.c_str(), "1");
+  mqtt.publish(topic.c_str(), status.c_str());
 }
 
 void MqttClient::reconnect() {
@@ -60,4 +62,14 @@ void MqttClient::mqttKeepAlive() {
   } else {
     mqtt.loop();
   }
+}
+
+boolean MqttClient::subscribe(String topic) {
+  Serial.println("trying ti subscribe to " + topic);
+  return mqtt.subscribe(topic.c_str());
+}
+
+void MqttClient::setCallback(std::function<void(char*, uint8_t*, unsigned int)> callback) {
+  Serial.println("Setting callbackFunction");
+  mqtt.setCallback(callback);
 }
