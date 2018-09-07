@@ -23,6 +23,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   String myLoad = "";
   myLoad.getBytes(payload, length);
   Serial.println("payload:-" + myLoad + "-");
+  String myTopic = "";
   triggerGarageDoor();
 }
 
