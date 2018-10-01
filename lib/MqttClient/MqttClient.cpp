@@ -11,11 +11,7 @@ MqttClient::MqttClient() {
   mqttPort = MQTT_PORT;
   mqttUser = MQTT_USER;
   mqttPwd = MQTT_PWD;
-
   deviceId = "esp-" + String(ESP.getChipId(), HEX);
-
-
-
   mqtt = PubSubClient (wifiClient);
   mqtt.setServer(mqttBroker.c_str(), mqttPort);
 }
@@ -42,8 +38,8 @@ void MqttClient::connect() {
 }
 
 void MqttClient::sendMessage(String status) {
-  Serial.println("Sending message: connectedGarageDoor" + getDeviceId() + "/status - " + status);
-  String topic = "connectedGarageDoor/" + getDeviceId() + "/status";
+  Serial.println("Sending message: connectedGarageDoor/status - " + status);
+  String topic = "connectedGarageDoor/status";
   mqtt.publish(topic.c_str(), status.c_str());
 }
 
@@ -65,7 +61,7 @@ void MqttClient::mqttKeepAlive() {
 }
 
 boolean MqttClient::subscribe(String topic) {
-  Serial.println("trying ti subscribe to " + topic);
+  Serial.println("trying to subscribe to " + topic);
   return mqtt.subscribe(topic.c_str());
 }
 

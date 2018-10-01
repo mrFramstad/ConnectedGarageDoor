@@ -6,24 +6,19 @@ MqttClient mqttClient;
 const int trigPin = D1;
 const int echoPin = D2;
 const int releePin = D5;
-boolean status = false;
+boolean isOpen = false;
 long duration;
 int distance;
 
 void triggerGarageDoor () {
+  Serial.println("triggering door");
   digitalWrite(releePin, HIGH);
-  delay(220);
+  delay(250);
   digitalWrite(releePin, LOW);
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-
-  //Serial.println("Entering callback. topic: " +  ", payload: ");
-  Serial.println("Entering callback. length: " + String(length));
-  String myLoad = "";
-  myLoad.getBytes(payload, length);
-  Serial.println("payload:-" + myLoad + "-");
-  String myTopic = "";
+  Serial.println("Entering callback.");
   triggerGarageDoor();
 }
 
@@ -42,7 +37,7 @@ void setup() {
   pinMode(releePin, OUTPUT);
 }
 
-boolean getStaus () {
+boolean isGarageDoorOpen () {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
@@ -50,19 +45,19 @@ boolean getStaus () {
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
   distance= duration*0.034/2;
-  //Serial.println(distance);
   return distance < 30;
 }
 
 void loop() {
   mqttClient.mqttKeepAlive();
-  boolean currentStatus = getStaus();
-  if (currentStatus != status) {
+  boolean currentStatus = isGarageDoorOpen();
+  if (currentStatus != isOpen) {
      if (currentStatus) {
         mqttClient.sendMessage("open");
      } else {
         mqttClient.sendMessage("closed");
      }
+     delay(1000);
   }
-  status = currentStatus;
+  isOpen = currentStatus;
 }
